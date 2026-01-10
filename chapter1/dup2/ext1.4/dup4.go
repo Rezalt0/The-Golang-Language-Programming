@@ -15,14 +15,14 @@ import (
 )
 
 var (
-	F bool
-	Input bufio.Scanner
+	F       bool
+	Input   bufio.Scanner
 	SigChan chan os.Signal
 )
 
 type lineInfo struct {
-    count int
-    files []string
+	count int
+	files []string
 }
 
 func instructionMessage(b bool) {
@@ -32,6 +32,7 @@ func instructionMessage(b bool) {
 		fmt.Println("После нажатия Ctrl+C, нажмите Ввод")
 	}
 }
+
 func chanWaitSIGINT() chan os.Signal {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT)
@@ -90,7 +91,10 @@ func main() {
 				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
 			}
 			countLines(f, counts)
-			f.Close()
+			err = f.Close()
+			if err != nil {
+				fmt.Printf("Error close file")
+			}
 		}
 	}
 	fmt.Printf("Line\tCountLine\tFilesName\n")
